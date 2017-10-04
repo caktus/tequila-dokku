@@ -78,7 +78,7 @@
   shell: dokku plugin:install-dependencies --core
 
 
-### setup dokku admin users ###
+### setup dokku users with tequlia-common dev users ###
 
 - name: Get current dokku users
   command: dokku ssh-keys:list
@@ -101,3 +101,15 @@
   with_items:
     - docker-ce
     - dokku
+
+- name: Allow port 80 through firewall
+  ufw: rule=allow port=http
+
+- name: Allow port 443 through firewall
+  ufw: rule=allow port=https
+
+- name: Add dokku user to tequila-common groups
+  user:
+    name: dokku
+    groups: admin,login
+    append: yes
