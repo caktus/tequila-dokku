@@ -1,0 +1,20 @@
+# http://dokku.viewdocs.io/dokku/getting-started/upgrading/#upgrade-instructions
+---
+
+- name: Stop running dokku apps
+  command: dokku --quiet apps:list | xargs -L1 dokku ps:stop
+  tags: upgrade
+
+- name: Install docker-ce
+  apt:
+    name: docker-ce={{docker_version}}
+    update_cache: true
+    force: true
+  tags: upgrade
+
+- name: Install dokku
+  apt:
+    name: dokku={{dokku_version}}
+    update_cache: true
+    force: true
+  tags: upgrade

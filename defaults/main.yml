@@ -7,3 +7,4 @@ dokku_key_file: ""
 docker_version: '17.06.2~ce-0~ubuntu'  # pin version to manage upgrades
 dokku_version: '0.10.4'  # pin version to manage upgrades
 dokku_hostname: 'dokku.me'
+dokku_do_upgrade: false  # set to force upgrade

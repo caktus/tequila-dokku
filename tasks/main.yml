@@ -113,3 +113,6 @@
     name: dokku
     groups: admin,login
     append: yes
+
+- include: upgrade.yml
+  when: dokku_do_upgrade
