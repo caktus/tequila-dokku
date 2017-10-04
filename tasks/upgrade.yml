@@ -18,3 +18,7 @@
     update_cache: true
     force: true
   tags: upgrade
+
+- name: Rebuild dokku apps
+  command: dokku ps:rebuildall
+  tags: upgrade
