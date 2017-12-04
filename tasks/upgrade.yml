@@ -5,6 +5,15 @@
   command: dokku --quiet apps:list | xargs -L1 dokku ps:stop
   tags: upgrade
 
+- name: Unhold packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: install
+  with_items:
+    - docker-ce
+    - dokku
+  tags: upgrade
+
 - name: Install docker-ce
   apt:
     name: docker-ce={{docker_version}}
@@ -19,6 +28,15 @@
     force: true
   tags: upgrade
 
-- name: Rebuild dokku apps
-  command: dokku ps:rebuildall
+- name: Hold docker and dokku versions
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: install
+  with_items:
+    - docker-ce
+    - dokku
+  tags: upgrade
+
+- name: Restart all dokku apps
+  command: dokku ps:restartall
   tags: upgrade
