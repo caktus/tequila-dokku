@@ -93,10 +93,10 @@
 
 
 ### Install plugins
-
 - name: install plugins
-  shell: test -d /var/lib/dokku/plugins/available/{{ item }} || dokku plugin:install https://github.com/dokku/dokku-{{ item }}.git {{ item }}
-  with_items: "{{ dokku_plugins }}"
+  shell: test -d /var/lib/dokku/plugins/available/{{ item.key }} || dokku plugin:install {{ item.value }} {{ item.key }}
+  # dokku_plugins is a dictionary where key=plugin name and value=plugin URL
+  with_dict: "{{ dokku_plugins }}"
 
 ### clean up ###
 

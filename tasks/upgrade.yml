@@ -42,8 +42,8 @@
   register: dokku
 
 - name: install or upgrade plugins
-  shell: if test -d /var/lib/dokku/plugins/available/{{ item }} ; then dokku plugin:update {{ item }} ; else dokku plugin:install https://github.com/dokku/dokku-{{ item }}.git {{ item }}; fi
-  with_items: "{{ dokku_plugins }}"
+  shell: if test -d /var/lib/dokku/plugins/available/{{ item.key }} ; then dokku plugin:update {{ item.key }} ; else dokku plugin:install {{ item.value }} {{ item.key }}; fi
+  with_dict: "{{ dokku_plugins }}"
 
 # https://askubuntu.com/questions/18654/how-to-prevent-updating-of-a-specific-package
 - name: Hold docker and dokku versions

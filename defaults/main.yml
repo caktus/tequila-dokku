@@ -9,7 +9,7 @@ dokku_version: '0.10.4'  # pin version to manage upgrades
 dokku_hostname: 'dokku.me'
 dokku_do_upgrade: false  # set to force upgrade
 dokku_plugins:
-- postgres
-- letsencrypt
-- logs
-- logspout
+  postgres: https://github.com/dokku/dokku-postgres.git
+  letsencrypt: https://github.com/dokku/dokku-letsencrypt.git
+  logs: https://github.com/dokku/dokku-logs.git
+  logspout: https://github.com/michaelshobbs/dokku-logspout
