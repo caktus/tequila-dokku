@@ -78,7 +78,7 @@
   shell: dokku plugin:install-dependencies --core
 
 
-### setup dokku users with tequlia-common dev users ###
+### setup dokku users with tequila-common dev users ###
 
 - name: Get current dokku users
   command: dokku ssh-keys:list
@@ -92,7 +92,15 @@
   with_items: "{{ users }}"
 
 
+### Install plugins
+- name: install plugins
+  shell: test -d /var/lib/dokku/plugins/available/{{ item.key }} || dokku plugin:install {{ item.value }} {{ item.key }}
+  # dokku_plugins is a dictionary where key=plugin name and value=plugin URL
+  with_dict: "{{ dokku_plugins }}"
+
 ### clean up ###
+
+# https://askubuntu.com/questions/18654/how-to-prevent-updating-of-a-specific-package
 
 - name: Hold docker and dokku versions
   dpkg_selections:

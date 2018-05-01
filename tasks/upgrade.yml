@@ -1,10 +1,24 @@
 # http://dokku.viewdocs.io/dokku/getting-started/upgrading/#upgrade-instructions
 ---
 
-- name: Stop running dokku apps
-  command: dokku --quiet apps:list | xargs -L1 dokku ps:stop
-  tags: upgrade
+- name: Are there any apps
+  shell: test $(dokku --quiet apps:list | wc -l) != "0"
+  ignore_errors: true
+  register: any_apps
 
+- when: any_apps is success
+  debug:
+    msg: There are apps on {{ inventory_hostname }}
+
+- when: any_apps is failed
+  debug:
+    msg: There are no apps on {{ inventory_hostname }}
+
+- name: Stop running dokku apps
+  when: any_apps is success
+  command: dokku --quiet apps:list | xargs -L1 -r dokku ps:stop
+
+# https://askubuntu.com/questions/18654/how-to-prevent-updating-of-a-specific-package
 - name: Unhold packages
   dpkg_selections:
     name: "{{ item }}"
@@ -12,31 +26,37 @@
   with_items:
     - docker-ce
     - dokku
-  tags: upgrade
 
 - name: Install docker-ce
   apt:
     name: docker-ce={{docker_version}}
     update_cache: true
     force: true
-  tags: upgrade
+  register: docker
 
 - name: Install dokku
   apt:
     name: dokku={{dokku_version}}
     update_cache: true
     force: true
-  tags: upgrade
+  register: dokku
 
+- name: install or upgrade plugins
+  shell: if test -d /var/lib/dokku/plugins/available/{{ item.key }} ; then dokku plugin:update {{ item.key }} ; else dokku plugin:install {{ item.value }} {{ item.key }}; fi
+  with_dict: "{{ dokku_plugins }}"
+
+# https://askubuntu.com/questions/18654/how-to-prevent-updating-of-a-specific-package
 - name: Hold docker and dokku versions
   dpkg_selections:
     name: "{{ item }}"
-    selection: install
+    selection: hold
   with_items:
     - docker-ce
     - dokku
-  tags: upgrade
 
-- name: Restart all dokku apps
-  command: dokku ps:restartall
-  tags: upgrade
+- name: Rebuild all dokku apps if docker or dokku changed and there are any apps
+  when: (docker.changed or dokku.changed) and any_apps is succeeded
+  command: dokku ps:rebuildall
+
+- name: Start all dokku apps
+  command: dokku --quiet apps:list | xargs -L1 -r dokku ps:start
