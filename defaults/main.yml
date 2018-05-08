@@ -3,8 +3,31 @@ dokku_vhost_enable: "true"
 dokku_web_config: "false"
 dokku_skip_key_file: "true"
 dokku_key_file: ""
+dokku_hostname: 'dokku.me'
 
 docker_version: '17.06.2~ce-0~ubuntu'  # pin version to manage upgrades
 dokku_version: '0.10.4'  # pin version to manage upgrades
-dokku_hostname: 'dokku.me'
-dokku_do_upgrade: false  # set to force upgrade
+
+dokku_plugins:
+- name: postgres
+  src: https://github.com/dokku/dokku-postgres.git
+  version: 1.2.7
+- name: letsencrypt
+  src: https://github.com/dokku/dokku-letsencrypt.git
+  version: 0.8.8
+# Others that might be handy:
+#- name: elasticsearch
+#  src: https://github.com/dokku/dokku-elasticsearch.git
+#  version: 1.2.7
+#- name: http-auth
+#  src: https://github.com/dokku/dokku-http-auth.git
+#  version: 0.4.0
+#- name: logspout
+#  src: https://github.com/michaelshobbs/dokku-logspout
+#  version: 0.4.0
+#- name: memcached
+#  src: https://github.com/dokku/dokku-memcached.git
+#  version: 1.2.7
+#- name: redis
+#  src: https://github.com/dokku/dokku-redis.git
+#  version: 1.2.7
