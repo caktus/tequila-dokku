@@ -59,13 +59,16 @@ Debconf options (see `here <http://dokku.viewdocs.io/dokku/getting-started/insta
     dokku_key_file: ""
     dokku_hostname: 'dokku.me'
 
-Docker and dokku versions, and whether to do
-an upgrade (otherwise does an install)::
+These variables control docker and dokku versions. If versions
+are configured, we'll do an upgrade if necessary to get to those versions;
+if not, we'll just install if the relevant package isn't already installed,
+but will not upgrade::
 
     docker_version: '17.06.2~ce-0~ubuntu'  # pin version to manage upgrades
     dokku_version: '0.10.4'  # pin version to manage upgrades
 
-Non-core plugins that you would like to be installed::
+The ``dokku_plugins`` variable lists
+non-core plugins that you would like to be installed::
 
     dokku_plugins:
     - name: postgres
