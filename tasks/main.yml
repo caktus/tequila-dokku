@@ -19,8 +19,8 @@
 
 - name: Add packagecloud's official GPG key
   apt_key:
-    url: "https://packagecloud.io/gpg.key"
-    id: "C2E73424D59097AB"
+    url: "https://packagecloud.io/dokku/dokku/gpgkey"
+    state: present
 
 - name: Setup dokku's repository
   apt_repository:
